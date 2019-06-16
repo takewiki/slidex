@@ -39,10 +39,13 @@ extract_xml <- function(path, force = FALSE) {
 
   unzip(gsub("\\.pptx", "\\.zip", file.path(basepath, "xml", ppt)),
         exdir = file.path(basepath, "xml"))
+  dir.create(file.path(basepath, "libs"), showWarnings = FALSE)
+  xaringan::summon_remark(to=file.path(basepath, "libs"))
 
   if(file.exists(file.path(basepath, "xml", "ppt", "media"))) {
     dir.create(file.path(basepath, "assets"), showWarnings = FALSE)
-    dir.create(file.path(basepath, "assets", "img"), showWarnings = FALSE)
+
+  dir.create(file.path(basepath, "assets", "img"), showWarnings = FALSE)
     file.rename(file.path(basepath, "xml", "ppt", "media"),
                 file.path(basepath, "assets", "img"))
   }
@@ -428,11 +431,12 @@ create_yaml <- function(title_sld, author, title = NULL, sub = NULL,
                    "output:",
                    "  xaringan::moon_reader:",
                    css,
-                   "  lib_dir: libs",
-                   "  nature:",
-                   paste0("    ", hls),
-                   "    highlightLines: true",
-                   "    countIncrementalSlides: false")
+                   "    lib_dir: libs",
+                   "    chakra: libs/remark-latest.min.js",
+                   "    nature:",
+                   paste0("      ", hls),
+                   "      highlightLines: true",
+                   "      countIncrementalSlides: false")
   elements <- elements[!map_lgl(elements, is.null)]
 
   paste0(elements, collapse = "\n")
